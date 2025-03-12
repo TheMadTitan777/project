@@ -1,0 +1,144 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Login Container */
+.login-container {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: left;
+    width: 400px; /* Increased width */
+}
+
+/* Form Elements */
+label {
+    font-weight: bold;
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Password Input with Toggle */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    flex: 1;
+    padding-right: 40px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+/* Remember Me & Forgot Password */
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+/* Align checkbox and text properly */
+.remember-forgot label {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Adds space between the checkbox and text */
+    cursor: pointer;
+}
+
+.remember-forgot input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Forgot Password Link */
+.remember-forgot a {
+    text-decoration: none;
+    color: #1d6bbe;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+.remember-forgot a {
+    text-decoration: none;
+    color: #1d6bbe;
+    font-size: 14px;
+}
+
+.remember-forgot a:hover {
+    text-decoration: underline;
+}
+
+/* Button */
+button {
+    background-color: #1d6bbe;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Links */
+p {
+    text-align: center;
+    margin-top: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: #1d6bbe;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.password-wrapper input {
+    flex: 1;
+    padding-right: 40px; /* Space for the eye icon */
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  
+  .eye-icon {
+    width: 20px;
+    height: 20px;
+  }

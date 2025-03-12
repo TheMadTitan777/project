@@ -1,0 +1,116 @@
+/* Basic styling for the login page */
+body {
+  background-color: #f0f2f5;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  background: #fff;
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  width: 300px;
+  text-align: center;
+}
+
+.login-container h2 {
+  margin-bottom: 1em;
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-container label {
+  margin: 10px 0 5px;
+  text-align: left;
+}
+
+.login-container input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box; /* Ensures input fields stay the same width */
+}
+
+/* Password input container */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper input {
+  flex: 1;
+  padding-right: 40px; /* Space for the eye icon */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.eye-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.login-container button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.login-container button:hover {
+  background-color: #0056b3;
+}
+
+/* Remember Me & Forgot Password */
+.remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+/* Align checkbox and text properly */
+.remember-forgot label {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Adds space between the checkbox and text */
+  cursor: pointer;
+}
+
+.remember-forgot input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Forgot Password Link */
+.remember-forgot a {
+  text-decoration: none;
+  color: #1d6bbe;
+}
+
+.remember-forgot a:hover {
+  text-decoration: underline;
+}

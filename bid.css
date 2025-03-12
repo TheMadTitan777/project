@@ -1,0 +1,69 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+}
+
+.nav-links a, #username {
+  margin-left: 15px;
+  color: white;
+  text-decoration: none;
+}
+
+#profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.item-container {
+  display: flex;
+  padding: 20px;
+  background: white;
+  margin: 20px auto;
+  width: 80%;
+  border-radius: 10px;
+}
+
+#item-image {
+  width: 300px;
+  height: auto;
+  border-radius: 5px;
+}
+
+.item-details {
+  margin-left: 20px;
+}
+
+.bid-section {
+  margin-top: 10px;
+}
+
+#bid-amount {
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.reviews-container {
+  width: 80%;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+#reviews-list {
+  list-style: none;
+  padding: 0;
+}

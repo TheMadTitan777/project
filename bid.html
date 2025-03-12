@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bid Page</title>
+    <link rel="stylesheet" href="bid.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <input type="text" id="search-bar" placeholder="Search items...">
+        <div class="nav-links">
+            <a href="homepage.html">Categories</a>
+            <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+            <span id="username">User123</span>
+            <a href="profile.html"><img id="profile-pic" src="default-profile.png" alt="Profile"></a>
+        </div>
+    </nav>
+
+    <!-- Item Details -->
+    <div class="item-container">
+        <img id="item-image" src="placeholder.jpg" alt="Item Image">
+        <div class="item-details">
+            <h1 id="item-name">Item Name</h1>
+            <p id="item-description">Item description goes here...</p>
+            <p><strong>Seller:</strong> <span id="seller-name">Seller123</span></p>
+            <p><strong>Current Price:</strong> $<span id="item-price">0</span></p>
+            <p><strong>Bidders Watching:</strong> <span id="watchers">0</span></p>
+            <p><strong>Bids Placed:</strong> <span id="bid-count">0</span></p>
+            <p><strong>Bid Ends In:</strong> <span id="bid-timer">00:00:00</span></p>
+            
+            <!-- Bidding Area -->
+            <div class="bid-section">
+                <input type="number" id="bid-amount" placeholder="Enter bid amount">
+                <button id="place-bid">Place Bid</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-container">
+        <h2>Reviews</h2>
+        <ul id="reviews-list">
+            <li>No reviews yet.</li>
+        </ul>
+    </div>
+
+    <script src="bid.js"></script>
+</body>
+</html>

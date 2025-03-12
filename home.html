@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Homepage</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header>
+        <div class="nav-left">
+            <input type="text" id="search-bar" placeholder="Search for items...">
+        </div>
+        <div class="nav-right">
+            <div class="cart-watchlist">
+                <a href="watchlist.html">Watchlist</a>
+            </div>
+
+            <div class="user-info">
+                <div class="user-dropdown">
+                    <a href="profile.html"><img id="user-pfp" src="default-pfp.png" alt="Profile"></a>
+                    <span id="username-display"></span>
+                    <div class="dropdown-menu">
+                        <a href="profile.html">Profile</a>
+                        <a href="settings.html">Settings</a>
+                        <button id="logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </header>
+
+    <!-- Category Section -->
+    <nav class="categories">
+        <button class="category-btn">Electronics</button>
+        <button class="category-btn">Fashion</button>
+        <button class="category-btn">Art</button>
+        <button class="category-btn">Collectibles</button>
+        <button class="category-btn">More...</button>
+    </nav>
+
+    <!-- Auction Items Section -->
+    <section class="auction-items">
+        <h2>Currently Auctioning</h2>
+        <div id="items-container">
+            <!-- Auction items will be dynamically inserted here via JavaScript -->
+        </div>
+    </section>
+
+    <script src="home.js"></script>
+</body>
+</html>

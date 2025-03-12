@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href="sellerdashboard.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome, <span id="seller-username"></span>!</h1>
+        <div class="dropdown">
+            <button class="dropbtn">Menu ▼</button>
+            <div class="dropdown-content">
+                <a href="sell.html">Sell</a>
+                <a href="#" id="my-items">My Items</a>
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>All Auction Items</h2>
+        <div id="items-container"></div>
+    </div>
+
+    <script src="sellerdashboard.js"></script>
+</body>
+</html>

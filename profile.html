@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="profile-container">
+        <h2>Profile</h2>
+        <div class="profile-picture">
+            <img id="profile-img" src="default-profile.png" alt="Profile Picture">
+            <input type="file" id="upload-img" accept="image/*">
+        </div>
+
+        <div class="profile-details">
+            <p><strong>First Name:</strong> <span id="firstName"></span></p>
+            <p><strong>Last Name:</strong> <span id="lastName"></span></p>
+            <p><strong>Username:</strong> <span id="username"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <p><strong>Date of Birth:</strong> <span id="dob"></span></p>
+            <p><strong>Shipping Address:</strong> <span id="shippingAddress"></span></p>
+        </div>
+
+        <!-- Wallet Section -->
+        <div class="wallet-section">
+            <h3>Connected Wallets</h3>
+            <ul id="wallet-list">
+                <li>Not connected</li>
+            </ul>
+            <button id="connect-wallet">Connect Wallet</button>
+            <button id="add-wallet">Add New Wallet</button>
+            <button id="change-wallet">Reset Wallets</button>
+        </div>
+
+        <!-- Account Settings Link -->
+        <div class="account-settings">
+            <a href="settings.html">Account Settings</a>
+        </div>
+
+        <!-- Go to Homepage Button -->
+        <div class="homepage-link">
+            <button id="go-home"><a href="home.html"></a>Go to Homepage</button>
+        </div>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>
