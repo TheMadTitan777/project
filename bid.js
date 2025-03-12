@@ -3,10 +3,10 @@ document.addEventListener("DOMContentLoaded", function() {
   const item = JSON.parse(sessionStorage.getItem("selectedItem"));
   
   if (item) {
-      document.getElementById("item-image").src = item.image;
-      document.getElementById("item-name").textContent = item.name;
-      document.getElementById("item-description").textContent = item.description;
-      document.getElementById("seller-name").textContent = item.seller;
+      document.getElementById("item-image").src = item.item_image;
+      document.getElementById("item-name").textContent = item.item_name;
+      document.getElementById("item-description").textContent = item.item_description;
+      document.getElementById("seller-name").textContent = item.seller_name;
       document.getElementById("item-price").textContent = item.price;
       document.getElementById("watchers").textContent = item.watchers;
       document.getElementById("bid-count").textContent = item.bids;

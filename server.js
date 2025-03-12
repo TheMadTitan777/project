@@ -25,7 +25,7 @@ pool.connect()
 
 // ✅ Middleware
 app.use(cors({
-    origin: ['http://127.0.0.1:5500', 'http://localhost:3000'] // Allow multiple origins
+    origin: ['http://127.0.0.1:5500', 'https://blockchain-auction-site.onrender.com'] // Allow multiple origins
 }));
  // Replace with the URL where your frontend is hosted
   // This is where you add CORS
