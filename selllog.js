@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const rememberMe = document.getElementById("rememberMe").checked;
 
         try {
-            const response = await fetch("http://localhost:5000/api/seller/login", {
+            const response = await fetch("https://blockchain-auction-site.onrender.com/api/seller/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const sellerEmail = sessionStorage.getItem("sellerEmail");
 
     if (sellerUsername && sellerEmail) {
-        fetch("http://localhost:5000/api/seller/verify", {
+        fetch("https://blockchain-auction-site.onrender.com/api/seller/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email: sellerEmail }),

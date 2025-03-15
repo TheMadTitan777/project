@@ -1,69 +1,117 @@
+/* General Styling */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background: #f4f4f4;
 }
 
-.navbar {
+/* Header */
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #333;
+  background: #222;
   color: white;
   padding: 10px 20px;
 }
 
-.nav-links a, #username {
-  margin-left: 15px;
-  color: white;
-  text-decoration: none;
+.logo {
+  font-size: 24px;
+  font-weight: bold;
 }
 
-#profile-pic {
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+#username-display {
+  margin-right: 10px;
+}
+
+#user-pfp {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   cursor: pointer;
 }
 
-.item-container {
-  display: flex;
-  padding: 20px;
+/* Dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: white;
+  right: 0;
+  min-width: 120px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 10px;
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Auction Item */
+.auction-item {
   background: white;
   margin: 20px auto;
-  width: 80%;
+  padding: 20px;
+  width: 50%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left; /* FIX: Left-aligned text */
+}
+
+.auction-item img {
+  max-width: 100%;
   border-radius: 10px;
 }
 
-#item-image {
-  width: 300px;
-  height: auto;
-  border-radius: 5px;
-}
-
-.item-details {
-  margin-left: 20px;
-}
-
-.bid-section {
-  margin-top: 10px;
-}
-
-#bid-amount {
-  padding: 5px;
-  margin-right: 10px;
-}
-
-.reviews-container {
-  width: 80%;
-  margin: 20px auto;
+/* Reviews */
+.reviews {
   background: white;
+  margin: 20px auto;
   padding: 20px;
+  width: 50%;
   border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left; /* FIX: Left-aligned text */
 }
 
-#reviews-list {
-  list-style: none;
-  padding: 0;
+textarea {
+  width: 80%;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px;
+  background: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: darkblue;
 }

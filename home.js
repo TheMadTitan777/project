@@ -1,16 +1,5 @@
-// Auction Items (Mock Data)
-const auctionItems = [
-    { id: 1, name: "Vintage Watch", image: "auction items/watch.jpeg", price: "0.0003 ETH", seller: "JohnDoe", watchers: 12, bids: 6, bidEndTime: "2025-03-10T18:00:00Z", description: "A classic 1960s wristwatch." },
-    { id: 2, name: "Rare Painting", image: "auction items/painting.jpg", price: "0.5 ETH", seller: "ArtDealer99", watchers: 25, bids: 10, bidEndTime: "2025-03-12T20:00:00Z", description: "A rare 18th-century painting." },
-    { id: 3, name: "Gaming Laptop", image: "auction items/laptop.jpg", price: "0.0006 ETH", seller: "TechGuru", watchers: 18, bids: 9, bidEndTime: "2025-03-15T15:30:00Z", description: "A powerful gaming laptop with RTX 4080." },
-    { id: 4, name: "Antique Vase", image: "auction items/vase.jpg", price: "0.03 ETH", seller: "AntiqueLover", watchers: 7, bids: 3, bidEndTime: "2025-03-09T12:00:00Z", description: "A delicate vase from the Ming Dynasty." },
-    { id: 5, name: "1950 Chair", image: "auction items/chair.jpg", price: "0.0009 ETH", seller: "FurnitureCollector", watchers: 4, bids: 2, bidEndTime: "2025-03-14T10:00:00Z", description: "A vintage chair from the 1950s." },
-    { id: 6, name: "Noise-Canceling Headphones", image: "auction items/headphones.jpg", price: "0.005 ETH", seller: "AudioMaster", watchers: 15, bids: 8, bidEndTime: "2025-03-11T21:00:00Z", description: "Premium noise-canceling headphones with spatial audio." }
-];
-
-// Ensure the page is fully loaded before executing
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ Home Page Loaded");
+document.addEventListener("DOMContentLoaded", async function () {
+    console.log("✅ Buyer Dashboard Loaded");
 
     // ✅ Load user data
     const username = sessionStorage.getItem("buyerUsername");
@@ -27,30 +16,37 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("username-display").textContent = username;
     document.getElementById("user-pfp").src = profilePicture;
 
-    // ✅ Load auction items
-    const itemsContainer = document.getElementById("items-container");
-    if (itemsContainer) {
+    // ✅ Fetch auction items from the server
+    try {
+        const response = await fetch("https://blockchain-auction-site.onrender.com/api/auction-items");
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error("Invalid response format: Expected an array");
+
+        const itemsContainer = document.getElementById("items-container");
         itemsContainer.innerHTML = ""; // Clear previous content
 
-        auctionItems.forEach(item => {
+        data.forEach(item => {
+            console.log("Raw bidendtime:", item.bidendtime); // Debugging timestamp
+
             let itemCard = document.createElement("div");
             itemCard.classList.add("item-card");
-            itemCard.innerHTML = `
-                <img src="${item.image}" alt="${item.name}" onerror="this.src='default-item.jpg'">
-                <h3>${item.name}</h3>
-                <p>Starting Bid: ${item.price}</p>
-                <button class="bid-btn" data-id="${item.id}">Place Bid</button>
-            `;
-            itemsContainer.appendChild(itemCard);
-        });
+            const countdownId = `countdown-${item.id}`;
 
-        // ✅ Attach click event to all bid buttons
-        document.querySelectorAll(".bid-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                const itemId = parseInt(this.dataset.id);
-                placeBid(itemId);
-            });
+            itemCard.innerHTML = `
+                <img src="${item.item_image}" alt="${item.item_name}" onerror="this.src='default-item.jpg'">
+                <h3>${item.item_name}</h3>
+                <p>Starting Bid: ${parseFloat(item.item_price).toFixed(4)} ETH</p>
+                <p>Seller: ${item.seller_name}</p>
+                <p><strong>Time Left:</strong> <span id="${countdownId}"></span></p>
+                <button class="bid-btn" id="bid-btn-${item.id}" onclick="placeBid(${item.id})">Place Bid</button>
+            `;
+
+            itemsContainer.appendChild(itemCard);
+            startCountdown(item.bidendtime, countdownId, item.id, itemCard);
         });
+    } catch (error) {
+        console.error("Error fetching auction items:", error);
+        alert("❌ Error loading auction items. Please try again later.");
     }
 
     // ✅ Search Functionality
@@ -80,14 +76,48 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// ✅ Countdown Function
+function startCountdown(bidEndTimeRaw, elementId, itemId, itemCard) {
+    const countdownElement = document.getElementById(elementId);
+    const bidButton = document.getElementById(`bid-btn-${itemId}`);
+
+    let bidEndTime = new Date(bidEndTimeRaw);
+    if (isNaN(bidEndTime.getTime())) {
+        bidEndTime = new Date(Number(bidEndTimeRaw) * 1000); // Try converting from epoch
+    }
+
+    if (isNaN(bidEndTime.getTime())) {
+        countdownElement.textContent = "Invalid End Time";
+        console.error("Invalid bidendtime format:", bidEndTimeRaw);
+        return;
+    }
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const end = bidEndTime.getTime();
+        const timeLeft = end - now;
+
+        if (timeLeft <= 0) {
+            countdownElement.textContent = "Auction Ended";
+            itemCard.classList.add("ended");
+            bidButton.disabled = true;
+            bidButton.textContent = "Auction Closed";
+            return;
+        }
+
+        const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+        const seconds = Math.floor((timeLeft / 1000) % 60);
+
+        countdownElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        setTimeout(updateCountdown, 1000);
+    }
+
+    updateCountdown();
+}
+
 // ✅ Place Bid Function
 function placeBid(itemId) {
-    const selectedItem = auctionItems.find(item => item.id === itemId);
-
-    if (selectedItem) {
-        sessionStorage.setItem("selectedItem", JSON.stringify(selectedItem));
-        window.location.href = "bid.html"; // Redirect to the bid page
-    } else {
-        alert("❌ Item not found!");
-    }
+    sessionStorage.setItem("selectedItem", itemId);
+    window.location.href = "bid.html"; // Redirect to the bid page
 }
