@@ -27,27 +27,13 @@ pool.connect()
     });
 
 // ✅ Middleware
+app.use(cors({
+    origin: ["http://127.0.0.1:5500", "https://blockchain-auction-site.onrender.com"]
+}));
+app.use(bodyParser.json());
 
-const corsOptions = {
-    origin: function (origin, callback) {
-        const allowedOrigins = [
-            "http://127.0.0.1:5500",
-            "http://127.0.0.1:5501",  // ✅ Added this
-            "https://blockchain-auction-site.onrender.com"
-        ];
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("CORS not allowed for this origin"));
-        }
-    },
-    methods: "GET, POST, PUT, DELETE, OPTIONS",
-    allowedHeaders: "Content-Type, Authorization",
-    credentials: true, 
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Handle preflight requests
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // 📌 Buyer Signup Route
@@ -100,6 +86,77 @@ app.post("/api/seller/signup", async (req, res) => {
     }
 });
 
+
+
+// 📌 Buyer Login Route
+app.post("/api/buyer/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required." });
+    }
+
+    try {
+        const userQuery = await pool.query("SELECT * FROM users WHERE email = $1 AND role = 'buyer'", [email]);
+
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ message: "Buyer not found." });
+        }
+
+        const user = userQuery.rows[0];
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: "Incorrect password." });
+        }
+
+        res.status(200).json({ 
+            success: true, 
+            message: "Login successful", 
+            user: { id: user.id, username: user.username, email: user.email, role: user.role } 
+        });
+
+    } catch (error) {
+        console.error("❌ Buyer Login Error:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+// 📌 Seller Login Route
+app.post("/api/seller/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required." });
+    }
+
+    try {
+        const userQuery = await pool.query("SELECT * FROM users WHERE email = $1 AND role = 'seller'", [email]);
+
+        if (userQuery.rows.length === 0) {
+            return res.status(404).json({ message: "Seller not found." });
+        }
+
+        const user = userQuery.rows[0];
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: "Incorrect password." });
+        }
+
+        res.status(200).json({ 
+            success: true, 
+            message: "Login successful", 
+            user: { id: user.id, username: user.username, email: user.email, role: user.role } 
+        });
+
+    } catch (error) {
+        console.error("❌ Seller Login Error:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
 // ✅ Image Upload Setup
 const storage = multer.diskStorage({
     destination: "./uploads",
@@ -109,6 +166,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 if (!fs.existsSync("./uploads")) fs.mkdirSync("./uploads");
+
+
 
 // 📌 POST: List a new auction item
 app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) => {
@@ -137,6 +196,8 @@ app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) =
     }
 });
 
+
+
 // 📌 GET: Fetch all auction items
 app.get("/api/auction-items", async (req, res) => {
     try {
@@ -148,7 +209,7 @@ app.get("/api/auction-items", async (req, res) => {
     }
 });
 
-// 📌 GET: Fetch a specific auction item
+// For a speific auction item
 app.get("/api/auction-items/:id", async (req, res) => {
     const itemId = req.params.id;
 
@@ -165,6 +226,8 @@ app.get("/api/auction-items/:id", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+
 
 // 🏁 Start Server
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
