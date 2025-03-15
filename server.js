@@ -32,24 +32,23 @@ const corsOptions = {
     origin: function (origin, callback) {
         const allowedOrigins = [
             "http://127.0.0.1:5500",
+            "http://127.0.0.1:5501",  // ✅ Added this
             "https://blockchain-auction-site.onrender.com"
         ];
         if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true); // Allow requests from allowed origins
+            callback(null, true);
         } else {
             callback(new Error("CORS not allowed for this origin"));
         }
     },
     methods: "GET, POST, PUT, DELETE, OPTIONS",
     allowedHeaders: "Content-Type, Authorization",
-    credentials: true,
+    credentials: true, 
 };
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // Handle preflight requests
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // 📌 Buyer Signup Route
 app.post("/api/buyer/signup", async (req, res) => {
