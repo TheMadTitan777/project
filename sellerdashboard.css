@@ -74,3 +74,8 @@ header {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+.ended {
+    opacity: 0.5;
+    pointer-events: none;
+}

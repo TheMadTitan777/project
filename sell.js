@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const itemName = document.getElementById("item-name").value.trim();
         const itemDescription = document.getElementById("item-description").value.trim();
         const itemPrice = parseFloat(document.getElementById("item-price").value.trim());
+        const bidDuration = parseInt(document.getElementById("bid-duration").value.trim());
         const itemImage = document.getElementById("item-image").files[0];
 
         if (!itemImage) {
@@ -23,17 +24,22 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Calculate bid end time
+        const bidEndTime = Date.now() + bidDuration * 60 * 60 * 1000;
+
         const formData = new FormData();
         formData.append("itemImage", itemImage);
         formData.append("itemName", itemName);
         formData.append("itemDescription", itemDescription);
         formData.append("itemPrice", itemPrice);
         formData.append("sellerName", sellerName);
+        formData.append("bidDuration", bidDuration);
+        formData.append("bidEndTime", bidEndTime);
         formData.append("watchers", 0);
         formData.append("bidCount", 0);
 
         try {
-            const response = await fetch("http://localhost:5000/api/seller/list-item", {
+            const response = await fetch("https://blockchain-auction-site.onrender.com/api/seller/list-item", {
                 method: "POST",
                 body: formData,
             });

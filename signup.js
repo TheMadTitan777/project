@@ -72,7 +72,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
 
     try {
         // Send data to Aiven PostgreSQL backend
-        const response = await fetch("http://localhost:5000/api/buyer/signup", {  // Adjust API URL if needed
+        const response = await fetch("https://blockchain-auction-site.onrender.com/api/buyer/signup", {  // Adjust API URL if needed
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
