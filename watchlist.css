@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#watchlist-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.watchlist-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    width: 250px;
+    text-align: center;
+}
+
+.watchlist-item img {
+    width: 100%;
+    height: auto;
+}
+
+.remove-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}

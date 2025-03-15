@@ -1,25 +1,27 @@
+/* General Styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
+/* Profile Container */
 .profile-container {
     background: white;
-    padding: 40px;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 350px;
     text-align: center;
 }
 
+/* Profile Picture */
 .profile-picture {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     margin-bottom: 15px;
 }
 
@@ -31,44 +33,54 @@ body {
     border: 2px solid #007bff;
 }
 
-input[type="file"] {
-    margin-top: 10px;
+#upload-img {
+    display: block;
+    margin: 10px auto;
 }
 
+/* Profile Details */
 .profile-details p {
-    background: #f8f8f8;
-    padding: 8px;
-    border-radius: 5px;
+    font-size: 14px;
     margin: 5px 0;
-    text-align: left;
 }
 
-.payment-section {
-    margin-top: 15px;
+/* Wallet Section */
+.wallet-section {
+    margin-top: 20px;
 }
 
-button {
-    background-color: #007bff;
+.wallet-section button {
+    background: #007bff;
     color: white;
-    padding: 10px;
     border: none;
+    padding: 8px;
+    margin: 5px;
     cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
     border-radius: 5px;
 }
 
-button:hover {
-    background-color: #0056b3;
+.wallet-section button:hover {
+    background: #0056b3;
 }
 
-.account-settings {
-    display: inline-block;
-    margin-top: 25px;
+/* Account Settings & Homepage */
+.account-settings a, .homepage-link button {
+    display: block;
+    margin-top: 15px;
     text-decoration: none;
     color: #007bff;
 }
 
-.settings-link:hover {
-    text-decoration: underline;
+.homepage-link button {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.homepage-link button:hover {
+    background: #218838;
 }

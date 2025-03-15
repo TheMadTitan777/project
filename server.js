@@ -27,14 +27,29 @@ pool.connect()
     });
 
 // ✅ Middleware
-app.use(cors({
-    origin: ["http://127.0.0.1:5500", "https://blockchain-auction-site.onrender.com"]
-}));
-app.use(bodyParser.json());
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        const allowedOrigins = [
+            "http://127.0.0.1:5500",
+            "https://blockchain-auction-site.onrender.com"
+        ];
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true); // Allow requests from allowed origins
+        } else {
+            callback(new Error("CORS not allowed for this origin"));
+        }
+    },
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
+    allowedHeaders: "Content-Type, Authorization",
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Handle preflight requests
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 // 📌 Buyer Signup Route
 app.post("/api/buyer/signup", async (req, res) => {
@@ -96,8 +111,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 if (!fs.existsSync("./uploads")) fs.mkdirSync("./uploads");
 
-
-
 // 📌 POST: List a new auction item
 app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) => {
     console.log("🔍 Request Body:", req.body);
@@ -125,8 +138,6 @@ app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) =
     }
 });
 
-
-
 // 📌 GET: Fetch all auction items
 app.get("/api/auction-items", async (req, res) => {
     try {
@@ -138,7 +149,7 @@ app.get("/api/auction-items", async (req, res) => {
     }
 });
 
-// For a speific auction item
+// 📌 GET: Fetch a specific auction item
 app.get("/api/auction-items/:id", async (req, res) => {
     const itemId = req.params.id;
 
@@ -155,8 +166,6 @@ app.get("/api/auction-items/:id", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
-
 
 // 🏁 Start Server
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

@@ -1,117 +1,183 @@
-/* General Styling */
-body {
-  font-family: Arial, sans-serif;
+/* General Reset */
+* {
   margin: 0;
   padding: 0;
-  background: #f4f4f4;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-/* Header */
+/* Body Styles */
+body {
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* Header Styles */
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #222;
+  background-color: #2d3e50;
   color: white;
-  padding: 10px 20px;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-}
-
-#username-display {
-  margin-right: 10px;
-}
-
-#user-pfp {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-/* Dropdown */
-.dropdown {
+  padding: 20px;
+  text-align: center;
   position: relative;
-  display: inline-block;
+}
+
+header h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+#seller-username {
+  font-weight: bold;
+  color: #ffcc00;
+}
+
+.dropdown {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 .dropbtn {
-  background: transparent;
+  background-color: #333;
   color: white;
+  padding: 10px;
+  font-size: 14px;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+}
+
+.dropbtn:hover {
+  background-color: #444;
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  background: white;
   right: 0;
-  min-width: 120px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 10px;
-  display: block;
-  text-decoration: none;
+  background-color: #333;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
 }
 
 .dropdown:hover .dropdown-content {
   display: block;
 }
 
-/* Auction Item */
-.auction-item {
-  background: white;
-  margin: 20px auto;
-  padding: 20px;
-  width: 50%;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: left; /* FIX: Left-aligned text */
-}
-
-.auction-item img {
-  max-width: 100%;
-  border-radius: 10px;
-}
-
-/* Reviews */
-.reviews {
-  background: white;
-  margin: 20px auto;
-  padding: 20px;
-  width: 50%;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: left; /* FIX: Left-aligned text */
-}
-
-textarea {
-  width: 80%;
-  height: 80px;
-  margin-bottom: 10px;
-}
-
-button {
-  padding: 10px;
-  background: blue;
+.dropdown-content a {
   color: white;
-  border: none;
-  cursor: pointer;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }
 
-button:hover {
-  background: darkblue;
+.dropdown-content a:hover {
+  background-color: #575757;
+}
+
+/* Container Styles */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Item Card Styles */
+.item-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 600px;
+  text-align: left;
+}
+
+.item-card img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.item-card h3 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.item-card p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.item-card strong {
+  font-weight: bold;
+}
+
+/* Bid Input Styles */
+#bid-amount {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  color: #333;
+}
+
+#bid-amount:focus {
+  border-color: #ffcc00;
+  outline: none;
+}
+
+/* Bid Button Styles */
+.bid-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.bid-btn:hover {
+  background-color: #218838;
+}
+
+.bid-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Countdown Timer */
+#countdown {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d9534f;
+}
+
+/* Footer Styles */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #333;
+  color: white;
+  font-size: 14px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
 }
