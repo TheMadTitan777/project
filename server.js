@@ -26,10 +26,16 @@ pool.connect()
         process.exit(1);
     });
 
-// ✅ Middleware
+// ✅ Middleware - Updated CORS Setup
 app.use(cors({
-    origin: ["http://127.0.0.1:5500", "https://blockchain-auction-site.onrender.com"]
+    origin: "*", // Allows all origins
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: "Content-Type,Authorization"
 }));
+
+// ✅ Handle preflight requests
+app.options("*", cors());
+
 app.use(bodyParser.json());
 
 app.use(bodyParser.json());
