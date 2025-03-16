@@ -173,6 +173,9 @@ app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) =
     }
 
     try {
+        // Convert bidEndTime to a valid timestamp format
+        const formattedBidEndTime = new Date(Number(bidEndTime)).toISOString();
+
         // Store the local image file path
         const imagePath = `/uploads/${req.file.filename}`;
 
@@ -181,7 +184,7 @@ app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) =
             `INSERT INTO auction_items (item_name, item_description, item_price, seller_name, item_image, watchers, bid_count, bidendtime)
              VALUES ($1, $2, $3, $4, $5, 0, 0, $6)
              RETURNING *`,
-            [itemName, itemDescription, itemPrice, sellerName, imagePath, bidEndTime]
+            [itemName, itemDescription, itemPrice, sellerName, imagePath, formattedBidEndTime]
         );
 
         res.status(201).json({ success: true, message: "Item listed successfully!", item: newItem.rows[0] });
@@ -191,6 +194,7 @@ app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) =
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 });
+
 
 // 📌 GET: Fetch all auction items
 app.get("/api/auction-items", async (req, res) => {
