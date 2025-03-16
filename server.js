@@ -7,6 +7,9 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const router = express.Router();
+const Buyer = require("../models/Buyer"); // Import Buyer model
+const authMiddleware = require("../middleware/auth"); // If you have auth middleware
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -257,11 +260,6 @@ app.get('/api/buyer/profile', async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
-
-const express = require("express");
-const router = express.Router();
-const Buyer = require("../models/Buyer"); // Import Buyer model
-const authMiddleware = require("../middleware/auth"); // If you have auth middleware
 
 // GET Buyer Profile
 router.get("/profile", authMiddleware, async (req, res) => {
