@@ -11,13 +11,13 @@ const fs = require("fs");
 
 // ✅ Configure Cloudinary with environment variables
 const cloudinary = require('cloudinary').v2;
-require('dotenv').config();
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: 'dto5un75a',
+  api_key: '715563139612524',
+  api_secret: '7zz5ORL2gMIy0oGa4cNIrdCDjWQ',
 });
+
 
 
 const app = express();
