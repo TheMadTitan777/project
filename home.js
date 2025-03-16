@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", async function () {
     console.log("✅ Buyer Dashboard Loaded");
 
-    // ✅ Load user data
+    // ✅ Debugging: Check if session storage contains buyerUsername
+    console.log("Stored buyer username:", sessionStorage.getItem("buyerUsername"));
+
     const username = sessionStorage.getItem("buyerUsername");
     const profilePicture = sessionStorage.getItem("buyerProfilePicture") || "default-pfp.png";
 
@@ -15,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.getElementById("username-display").textContent = username;
     document.getElementById("user-pfp").src = profilePicture;
+
 
     // ✅ Fetch auction items from the server
     try {

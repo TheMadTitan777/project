@@ -233,6 +233,54 @@ app.get("/api/auction-items/:id", async (req, res) => {
     }
 });
 
+app.get("/api/my-auction-items/:seller", async (req, res) => {
+    try {
+        const seller = req.params.seller;
+        const items = await AuctionItem.find({ seller_name: seller }); // Fetch items by seller
+        res.json(items);
+    } catch (error) {
+        console.error("Error fetching seller items:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+
+app.get('/api/buyer/profile', async (req, res) => {
+    try {
+        if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+
+        // Fetch user details from database
+        const user = await db.getUserById(req.user.id);
+
+        res.json({ username: user.username, email: user.email });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+const express = require("express");
+const router = express.Router();
+const Buyer = require("../models/Buyer"); // Import Buyer model
+const authMiddleware = require("../middleware/auth"); // If you have auth middleware
+
+// GET Buyer Profile
+router.get("/profile", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.user.id; // If using auth middleware
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const buyer = await Buyer.findById(userId).select("-password"); // Exclude password
+
+        if (!buyer) return res.status(404).json({ error: "Buyer not found" });
+
+        res.json(buyer);
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+module.exports = router;
 
 
 // 🏁 Start Server

@@ -1,43 +1,43 @@
 document.addEventListener("DOMContentLoaded", async function () {
+    console.log("✅ Seller Dashboard Loaded");
+
     const sellerUsername = sessionStorage.getItem("sellerUsername");
     if (!sellerUsername) {
         alert("Session expired. Please log in again.");
         window.location.href = "selllog.html";
         return;
     }
-    document.getElementById("seller-username").textContent = sellerUsername;
 
     try {
-        const response = await fetch("https://blockchain-auction-site.onrender.com/api/auction-items");
-        const data = await response.json();
-        if (!Array.isArray(data)) throw new Error("Invalid response format: Expected an array");
-
+        const response = await fetch(`https://blockchain-auction-site.onrender.com/api/my-auction-items/${sellerUsername}`);
+        const items = await response.json();
         const itemsContainer = document.getElementById("items-container");
-        itemsContainer.innerHTML = "";
 
-        data.forEach(item => {
-            console.log("Raw bidendtime:", item.bidendtime); // Debugging timestamp
+        if (!items.length) {
+            itemsContainer.innerHTML = "<p>No auction items found.</p>";
+            return;
+        }
 
+        itemsContainer.innerHTML = ""; // Clear previous items
+
+        items.forEach(item => {
             let itemCard = document.createElement("div");
             itemCard.classList.add("item-card");
-            itemCard.setAttribute("data-item-id", item.id); // Store item ID for deletion
-            const countdownId = `countdown-${item.id}`;
 
             itemCard.innerHTML = `
                 <img src="${item.item_image}" alt="${item.item_name}">
                 <h3>${item.item_name}</h3>
-                <p>Starting Bid: ${item.item_price}</p>
-                <p>Seller: ${item.seller_name}</p>
-                <p><strong>Time Left:</strong> <span id="${countdownId}"></span></p>
-                <button class="bid-btn" id="bid-btn-${item.id}" onclick="placeBid(${item.id})">Place Bid</button>
+                <p>Starting Bid: ${item.item_price} ETH</p>
+                <p>Time Left: <span id="countdown-${item.id}"></span></p>
             `;
 
             itemsContainer.appendChild(itemCard);
-            startCountdown(item.bidendtime, countdownId, item.id, itemCard);
+            startCountdown(item.bidendtime, `countdown-${item.id}`);
         });
+
     } catch (error) {
-        console.error("Error fetching items:", error);
-        alert("❌ Error loading auction items. Please try again later.");
+        console.error("❌ ERROR fetching seller's items:", error);
+        alert("Error loading auction items.");
     }
 
     document.getElementById("logout-btn").addEventListener("click", function () {
@@ -47,14 +47,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 });
 
-function startCountdown(bidEndTimeRaw, elementId, itemId, itemCard) {
+function startCountdown(bidEndTimeRaw, elementId) {
     const countdownElement = document.getElementById(elementId);
-    const bidButton = document.getElementById(`bid-btn-${itemId}`);
-
-    // Ensure bidEndTime is a valid timestamp
     let bidEndTime = new Date(bidEndTimeRaw);
+
     if (isNaN(bidEndTime.getTime())) {
-        bidEndTime = new Date(Number(bidEndTimeRaw) * 1000); // Try converting from epoch
+        bidEndTime = new Date(Number(bidEndTimeRaw) * 1000);
     }
 
     if (isNaN(bidEndTime.getTime())) {
@@ -65,17 +63,10 @@ function startCountdown(bidEndTimeRaw, elementId, itemId, itemCard) {
 
     function updateCountdown() {
         const now = new Date().getTime();
-        const end = bidEndTime.getTime();
-        const timeLeft = end - now;
+        const timeLeft = bidEndTime.getTime() - now;
 
         if (timeLeft <= 0) {
             countdownElement.textContent = "Auction Ended";
-            itemCard.classList.add("ended");
-            bidButton.disabled = true;
-            bidButton.textContent = "Auction Closed";
-
-            // **Automatically delete item**
-            deleteExpiredItem(itemId, itemCard);
             return;
         }
 
@@ -88,24 +79,4 @@ function startCountdown(bidEndTimeRaw, elementId, itemId, itemCard) {
     }
 
     updateCountdown();
-}
-
-async function deleteExpiredItem(itemId, itemCard) {
-    try {
-        const response = await fetch(`https://blockchain-auction-site.onrender.com/api/seller/delete/${itemId}`, { method: "DELETE" });
-        const data = await response.json();
-        if (data.success) {
-            console.log(`✅ Item ${itemId} deleted from database`);
-            itemCard.remove(); // Remove item from UI
-        } else {
-            console.error("Failed to delete expired item:", data.message);
-        }
-    } catch (error) {
-        console.error("Error deleting expired item:", error);
-    }
-}
-
-function placeBid(itemId) {
-    sessionStorage.setItem("selectedItem", itemId);
-    window.location.href = "bid.html";
 }

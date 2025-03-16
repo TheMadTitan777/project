@@ -1,27 +1,31 @@
 document.addEventListener("DOMContentLoaded", async function () {
     console.log("✅ Bid Page Loaded");
 
-    const sellerUsername = sessionStorage.getItem("sellerUsername");
-    if (!sellerUsername) {
+    // Retrieve buyer username from session storage
+    const buyerUsername = sessionStorage.getItem("buyerUsername");
+    if (!buyerUsername) {
         alert("Session expired. Please log in again.");
-        window.location.href = "selllog.html";
+        window.location.href = "login.html";
         return;
     }
-    document.getElementById("seller-username").textContent = sellerUsername;
+    document.getElementById("buyer-username").textContent = buyerUsername;
 
+    // Retrieve selected item from session storage
     const selectedItemId = sessionStorage.getItem("selectedItem");
     if (!selectedItemId) {
         console.error("❌ ERROR: No selected item found in session storage");
         alert("No auction item selected.");
-        window.location.href = "sellerdashboard.html";
+        window.location.href = "home.html";
         return;
     }
 
     try {
+        // Fetch auction item details
         const response = await fetch(`https://blockchain-auction-site.onrender.com/api/auction-items/${selectedItemId}`);
         const item = await response.json();
         if (!item || !item.item_name) throw new Error("Invalid item data received");
 
+        // Render auction item details
         const itemsContainer = document.getElementById("items-container");
         itemsContainer.innerHTML = "";
 
@@ -43,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         itemsContainer.appendChild(itemCard);
         startCountdown(item.bidendtime, countdownId);
 
-        // Attach event listener to the bid button
+        // Attach event listener to bid button
         document.getElementById(`bid-btn-${item.id}`).addEventListener("click", function () {
             placeBid(item.id);
         });
@@ -53,6 +57,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         alert("Error loading auction item.");
     }
 
+    // Logout button functionality
     document.getElementById("logout-btn").addEventListener("click", function () {
         sessionStorage.clear();
         alert("Logged out successfully!");
@@ -60,6 +65,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 });
 
+// Countdown Timer Function
 function startCountdown(bidEndTimeRaw, elementId) {
     const countdownElement = document.getElementById(elementId);
     let bidEndTime = new Date(bidEndTimeRaw);
@@ -96,219 +102,42 @@ function startCountdown(bidEndTimeRaw, elementId) {
 
 // Web3 Configuration
 const contractAddress = "0xdf345E5f8830B6Babb71806A6baD954a0B8Ae162"; // Update with actual contract address
-const contractABI = 
-    [
-        {
-            "inputs": [
-                {
-                    "internalType": "string",
-                    "name": "_itemName",
-                    "type": "string"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_itemPrice",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_auctionDuration",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "winner",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "AuctionEnded",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "bidder",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "BidWithdrawn",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "bidder",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "bidAmount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "NewBid",
-            "type": "event"
-        },
-        {
-            "inputs": [],
-            "name": "auctionEndTime",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "auctionEnded",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "bids",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "endAuction",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "highestBid",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "highestBidder",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "itemName",
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "itemPrice",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "placeBid",
-            "outputs": [],
-            "stateMutability": "payable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "seller",
-            "outputs": [
-                {
-                    "internalType": "address",
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "withdrawBid",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        }
+const contractABI = [ 
+    {
+        "inputs": [
+            { "internalType": "string", "name": "_itemName", "type": "string" },
+            { "internalType": "uint256", "name": "_itemPrice", "type": "uint256" },
+            { "internalType": "uint256", "name": "_auctionDuration", "type": "uint256" }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            { "indexed": true, "internalType": "address", "name": "winner", "type": "address" },
+            { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+        ],
+        "name": "AuctionEnded",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "highestBid",
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "placeBid",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    }
 ]; // Replace with actual ABI
 
+// Function to place a bid
 async function placeBid(itemId) {
     if (!window.ethereum || !window.ethereum.isMetaMask) {
         alert("🦊 MetaMask is required. Please install and enable MetaMask.");
@@ -324,6 +153,7 @@ async function placeBid(itemId) {
     }
 
     try {
+        // Connect to Ethereum provider
         const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
         await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
@@ -335,7 +165,7 @@ async function placeBid(itemId) {
 
         const transaction = await contract.placeBid({
             value: bidAmount,
-            gasLimit: ethers.utils.hexlify(500000) // Adjusted gas limit to a valid value
+            gasLimit: ethers.BigNumber.from("500000") // Corrected gas limit format
         });
 
         await transaction.wait();

@@ -7,23 +7,26 @@
     <link rel="stylesheet" href="sellerdashboard.css">
 </head>
 <body>
-    <header>
-        <h1>Welcome, <span id="seller-username"></span>!</h1>
+
+    <nav>
+        <h2>Seller Dashboard</h2>
+        
+        <!-- Dropdown Menu -->
         <div class="dropdown">
-            <button class="dropbtn">Menu ▼</button>
+            <button class="dropbtn">☰ Menu</button>
             <div class="dropdown-content">
-                <a href="sell.html">Sell</a>
-                <a href="#" id="my-items">My Items</a>
-                <a href="#" id="logout-btn">Logout</a>
+                <a href="list-item.html">📦 List Item</a>
+                <a href="seller-profile.html">👤 Seller Profile</a>
+                <a href="settings.html">⚙️ Settings</a>
+                <a id="logout-btn">🚪 Logout</a>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <div class="container">
-        <h2>All Auction Items</h2>
-        <div id="items-container"></div>
-    </div>
+    <h3>My Auction Items</h3>
+    <div id="items-container"></div>
 
     <script src="sellerdashboard.js"></script>
+
 </body>
 </html>
