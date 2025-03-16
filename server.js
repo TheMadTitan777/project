@@ -11,7 +11,6 @@ const fs = require("fs");
 
 // ✅ Configure Cloudinary with environment variables
 const cloudinary = require('cloudinary').v2;
-const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 
 cloudinary.config({
