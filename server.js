@@ -7,8 +7,6 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const router = express.Router();
-const authMiddleware = require("../middleware/auth"); // If you have auth middleware
 
 const app = express();
 const PORT = process.env.PORT || 5000;
