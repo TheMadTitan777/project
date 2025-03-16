@@ -9,14 +9,14 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-const cloudinary = require("cloudinary").v2;
-
 // ✅ Configure Cloudinary with environment variables
+const cloudinary = require('cloudinary').v2;
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -237,6 +237,28 @@ app.get("/api/my-auction-items/:seller", async (req, res) => {
     } catch (error) {
         console.error("Error fetching seller items:", error);
         res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+// 📌 DELETE: Delete an auction item by ID
+app.delete("/api/seller/delete-item/:id", async (req, res) => {
+    const itemId = req.params.id;
+
+    try {
+        // First, check if the item exists
+        const itemQuery = await pool.query("SELECT * FROM auction_items WHERE id = $1", [itemId]);
+        
+        if (itemQuery.rows.length === 0) {
+            return res.status(404).json({ message: "Item not found." });
+        }
+
+        // If item exists, proceed with the deletion
+        await pool.query("DELETE FROM auction_items WHERE id = $1", [itemId]);
+
+        res.status(200).json({ success: true, message: "Item deleted successfully!" });
+    } catch (error) {
+        console.error("❌ Error deleting item:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 
