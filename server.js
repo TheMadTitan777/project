@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -7,8 +8,6 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const router = express.Router();
-
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,21 +27,28 @@ pool.connect()
         process.exit(1);
     });
 
-// ✅ Middleware - Updated CORS Setup
+// ✅ Middleware
 app.use(cors({
-    origin: "*", // Allows all origins
+    origin: "*",
     methods: "GET,POST,PUT,DELETE,OPTIONS",
     allowedHeaders: "Content-Type,Authorization"
 }));
 
-// ✅ Handle preflight requests
 app.options("*", cors());
-
-app.use(bodyParser.json());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// ✅ Image Upload Setup
+const storage = multer.diskStorage({
+    destination: "./uploads",
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    },
+});
+const upload = multer({ storage });
+
+if (!fs.existsSync("./uploads")) fs.mkdirSync("./uploads");
 
 // 📌 Buyer Signup Route
 app.post("/api/buyer/signup", async (req, res) => {
@@ -95,40 +101,29 @@ app.post("/api/seller/signup", async (req, res) => {
 });
 
 
-
 // 📌 Buyer Login Route
 app.post("/api/buyer/login", async (req, res) => {
     const { email, password } = req.body;
-
     if (!email || !password) {
         return res.status(400).json({ message: "Email and password are required." });
     }
-
     try {
         const userQuery = await pool.query("SELECT * FROM users WHERE email = $1 AND role = 'buyer'", [email]);
-
         if (userQuery.rows.length === 0) {
             return res.status(404).json({ message: "Buyer not found." });
         }
-
         const user = userQuery.rows[0];
         const isMatch = await bcrypt.compare(password, user.password);
-
         if (!isMatch) {
             return res.status(401).json({ message: "Incorrect password." });
         }
-
-        res.status(200).json({ 
-            success: true, 
-            message: "Login successful", 
-            user: { id: user.id, username: user.username, email: user.email, role: user.role } 
-        });
-
+        res.status(200).json({ success: true, message: "Login successful", user: { id: user.id, username: user.username, email: user.email, role: user.role } });
     } catch (error) {
         console.error("❌ Buyer Login Error:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
+
 
 // 📌 Seller Login Route
 app.post("/api/seller/login", async (req, res) => {
@@ -165,29 +160,12 @@ app.post("/api/seller/login", async (req, res) => {
 });
 
 
-// ✅ Image Upload Setup
-const storage = multer.diskStorage({
-    destination: "./uploads",
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-    },
-});
-const upload = multer({ storage });
-if (!fs.existsSync("./uploads")) fs.mkdirSync("./uploads");
-
-
-
 // 📌 POST: List a new auction item
 app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) => {
-    console.log("🔍 Request Body:", req.body);
-    console.log("🔍 Uploaded File:", req.file);
-    
     const { itemName, itemDescription, itemPrice, sellerName, bidEndTime } = req.body;
-
     if (!req.file || !itemName || !itemDescription || !itemPrice || !sellerName || !bidEndTime) {
         return res.status(400).json({ message: "All fields must be filled." });
     }
-
     try {
         const newItem = await pool.query(
             `INSERT INTO auction_items (item_name, item_description, item_price, seller_name, item_image, watchers, bid_count, bidendtime)
@@ -195,16 +173,12 @@ app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) =
              RETURNING *`,
             [itemName, itemDescription, itemPrice, sellerName, `/uploads/${req.file.filename}`, bidEndTime]
         );
-
         res.status(201).json({ success: true, message: "Item listed successfully!", item: newItem.rows[0] });
-
     } catch (error) {
         console.error("❌ Error in /api/seller/list-item:", error);
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 });
-
-
 
 // 📌 GET: Fetch all auction items
 app.get("/api/auction-items", async (req, res) => {
@@ -217,17 +191,14 @@ app.get("/api/auction-items", async (req, res) => {
     }
 });
 
-// For a speific auction item
+// 📌 GET: Fetch a specific auction item
 app.get("/api/auction-items/:id", async (req, res) => {
     const itemId = req.params.id;
-
     try {
         const result = await pool.query("SELECT * FROM auction_items WHERE id = $1", [itemId]);
-
         if (result.rows.length === 0) {
             return res.status(404).json({ error: "Item not found" });
         }
-
         res.json(result.rows[0]);
     } catch (error) {
         console.error("Error fetching item:", error);
@@ -235,50 +206,17 @@ app.get("/api/auction-items/:id", async (req, res) => {
     }
 });
 
+// 📌 GET: Fetch seller's listed auction items
 app.get("/api/my-auction-items/:seller", async (req, res) => {
     try {
         const seller = req.params.seller;
-        const items = await AuctionItem.find({ seller_name: seller }); // Fetch items by seller
-        res.json(items);
+        const result = await pool.query("SELECT * FROM auction_items WHERE seller_name = $1", [seller]);
+        res.json(result.rows);
     } catch (error) {
         console.error("Error fetching seller items:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
-
-app.get('/api/buyer/profile', async (req, res) => {
-    try {
-        if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-
-        // Fetch user details from database
-        const user = await db.getUserById(req.user.id);
-
-        res.json({ username: user.username, email: user.email });
-    } catch (error) {
-        res.status(500).json({ message: "Server error" });
-    }
-});
-
-// GET Buyer Profile
-router.get("/profile", authMiddleware, async (req, res) => {
-    try {
-        const userId = req.user.id; // If using auth middleware
-        if (!userId) return res.status(401).json({ error: "Unauthorized" });
-
-        const buyer = await Buyer.findById(userId).select("-password"); // Exclude password
-
-        if (!buyer) return res.status(404).json({ error: "Buyer not found" });
-
-        res.json(buyer);
-    } catch (error) {
-        console.error("Error fetching profile:", error);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
-module.exports = router;
-
 
 // 🏁 Start Server
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
