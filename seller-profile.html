@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Profile</title>
+    <link rel="stylesheet" href="seller-profile.css">
+</head>
+<body>
+
+    <header>
+        <h1>Seller Profile</h1>
+        <button id="logout-btn">Logout</button>
+    </header>
+
+    <main>
+        <!-- Seller Info -->
+        <section id="seller-info">
+            <img id="profile-pic" src="default-avatar.png" alt="Seller Profile Picture">
+            <h2 id="seller-name">Loading...</h2>
+            <p id="seller-username">@loading</p>
+            <p id="seller-description">Loading seller details...</p>
+            <p><strong>Total Items Listed:</strong> <span id="total-items">0</span></p>
+            <p><strong>Joined:</strong> <span id="joined-date">Loading...</span></p>
+        </section>
+
+        <hr>
+
+        <!-- Seller's Auction Items -->
+        <section>
+            <h2>My Auction Items</h2>
+            <div id="items-container">
+                <p>Loading...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="seller-profile.js"></script>
+
+</body>
+</html>

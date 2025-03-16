@@ -9,6 +9,15 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
+const cloudinary = require("cloudinary").v2;
+
+// ✅ Configure Cloudinary with environment variables
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -40,13 +49,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ Image Upload Setup
-const storage = multer.diskStorage({
-    destination: "./uploads",
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-    },
-});
+const storage = multer.memoryStorage(); 
 const upload = multer({ storage });
+
 
 if (!fs.existsSync("./uploads")) fs.mkdirSync("./uploads");
 
@@ -163,22 +168,39 @@ app.post("/api/seller/login", async (req, res) => {
 // 📌 POST: List a new auction item
 app.post("/api/seller/list-item", upload.single("itemImage"), async (req, res) => {
     const { itemName, itemDescription, itemPrice, sellerName, bidEndTime } = req.body;
+
     if (!req.file || !itemName || !itemDescription || !itemPrice || !sellerName || !bidEndTime) {
         return res.status(400).json({ message: "All fields must be filled." });
     }
+
     try {
-        const newItem = await pool.query(
-            `INSERT INTO auction_items (item_name, item_description, item_price, seller_name, item_image, watchers, bid_count, bidendtime)
-             VALUES ($1, $2, $3, $4, $5, 0, 0, $6)
-             RETURNING *`,
-            [itemName, itemDescription, itemPrice, sellerName, `/uploads/${req.file.filename}`, bidEndTime]
-        );
-        res.status(201).json({ success: true, message: "Item listed successfully!", item: newItem.rows[0] });
+        // Upload image to Cloudinary
+        const result = await cloudinary.uploader.upload_stream({ folder: "auction_items" }, async (error, cloudinaryResult) => {
+            if (error) {
+                console.error("❌ Cloudinary Upload Error:", error);
+                return res.status(500).json({ message: "Image upload failed." });
+            }
+
+            // Store Cloudinary image URL in the database
+            const newItem = await pool.query(
+                `INSERT INTO auction_items (item_name, item_description, item_price, seller_name, item_image, watchers, bid_count, bidendtime)
+                 VALUES ($1, $2, $3, $4, $5, 0, 0, $6)
+                 RETURNING *`,
+                [itemName, itemDescription, itemPrice, sellerName, cloudinaryResult.secure_url, bidEndTime]
+            );
+
+            res.status(201).json({ success: true, message: "Item listed successfully!", item: newItem.rows[0] });
+        });
+
+        result.end(req.file.buffer); // Send image buffer to Cloudinary
+
     } catch (error) {
         console.error("❌ Error in /api/seller/list-item:", error);
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 });
+
+
 
 // 📌 GET: Fetch all auction items
 app.get("/api/auction-items", async (req, res) => {

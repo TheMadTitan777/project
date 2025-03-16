@@ -80,3 +80,11 @@ function startCountdown(bidEndTimeRaw, elementId) {
 
     updateCountdown();
 }
+
+document.getElementById("logout-btn").addEventListener("click", function () {
+    sessionStorage.removeItem("sellerUsername"); // Ensure sellerUsername is removed
+    sessionStorage.clear(); // Clear all session storage
+    alert("Logged out successfully!");
+    window.location.href = "selllog.html"; // Redirect to seller login page
+});
+

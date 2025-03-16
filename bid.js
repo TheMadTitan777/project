@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("logout-btn").addEventListener("click", function () {
         sessionStorage.clear();
         alert("Logged out successfully!");
-        window.location.href = "selllog.html";
+        window.location.href = "login.html";
     });
 });
 
