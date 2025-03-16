@@ -8,7 +8,6 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const router = express.Router();
-const Buyer = require("../models/Buyer"); // Import Buyer model
 const authMiddleware = require("../middleware/auth"); // If you have auth middleware
 
 const app = express();
