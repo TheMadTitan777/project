@@ -26,6 +26,18 @@ pool.connect()
         process.exit(1);
     });
 
+
+// Serve static files (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, "public"))); 
+
+// Serve intro.html as the homepage
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "intro.html"));
+});
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
 // ✅ Middleware
 app.use(cors({
     origin: "*",
