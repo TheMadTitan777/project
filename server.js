@@ -11,6 +11,16 @@ const fs = require("fs");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+
+
+// Serve static files from root (if needed)
+app.use(express.static(__dirname));
+
+// Route to serve intro.html
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "intro.html")); 
+});
+
 // ✅ PostgreSQL Connection
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL || 
@@ -24,11 +34,6 @@ pool.connect()
     .catch((err) => {
         console.error("❌ Database Connection Error:", err);
         process.exit(1);
-    });
-
-
-    app.get("/intro", (req, res) => {
-        res.sendFile(path.join(__dirname, "intro.html")); // Serve from root
     });
 
 
