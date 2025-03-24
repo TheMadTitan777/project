@@ -1,23 +1,69 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    console.log("✅ Watchlist Page Loaded");
 
-    // Add event listeners to all "Add to Watchlist" buttons
-    document.querySelectorAll(".watchlist-btn").forEach(button => {
-        button.addEventListener("click", function () {
-            const item = this.closest(".auction-item");
-            const itemId = item.getAttribute("data-id");
-            const itemName = item.querySelector("h3").innerText;
-            const itemPrice = item.querySelector(".bid-price").innerText;
-            const itemImage = item.querySelector("img").src;
+    const watchlistContainer = document.getElementById("watchlist-container");
+    let watchlist = JSON.parse(sessionStorage.getItem("watchlist")) || [];
 
-            // Check if item is already in the watchlist
-            if (!watchlist.some(i => i.id === itemId)) {
-                watchlist.push({ id: itemId, name: itemName, price: itemPrice, image: itemImage });
-                localStorage.setItem("watchlist", JSON.stringify(watchlist));
-                alert("Item added to Watchlist!");
-            } else {
-                alert("This item is already in your Watchlist.");
-            }
-        });
+    if (watchlist.length === 0) {
+        watchlistContainer.innerHTML = "<p>No items in your watchlist.</p>";
+        return;
+    }
+
+    watchlist.forEach(item => {
+        let itemCard = document.createElement("div");
+        itemCard.classList.add("item-card");
+
+        itemCard.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" onerror="this.src='default-item.jpg'">
+            <h3>${item.name}</h3>
+            <p>Starting Bid: ${parseFloat(item.price).toFixed(4)} ETH</p>
+            <p>Seller: ${item.seller}</p>
+            <p><strong>Time Left:</strong> <span id="countdown-${item.id}"></span></p>
+            <button class="remove-btn" onclick="removeFromWatchlist(${item.id})">❌ Remove</button>
+        `;
+
+        watchlistContainer.appendChild(itemCard);
+        startCountdown(item.bidendtime, `countdown-${item.id}`);
     });
 });
+
+// ✅ Remove Item from Watchlist
+function removeFromWatchlist(itemId) {
+    let watchlist = JSON.parse(sessionStorage.getItem("watchlist")) || [];
+    watchlist = watchlist.filter(item => item.id !== itemId);
+    sessionStorage.setItem("watchlist", JSON.stringify(watchlist));
+    location.reload();
+}
+
+// ✅ Clear Entire Watchlist
+function clearWatchlist() {
+    if (confirm("Are you sure you want to clear your watchlist?")) {
+        sessionStorage.removeItem("watchlist");
+        location.reload();
+    }
+}
+
+// ✅ Countdown Function
+function startCountdown(bidEndTimeRaw, elementId) {
+    const countdownElement = document.getElementById(elementId);
+    let bidEndTime = new Date(bidEndTimeRaw);
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const timeLeft = bidEndTime - now;
+
+        if (timeLeft <= 0) {
+            countdownElement.textContent = "Auction Ended";
+            return;
+        }
+
+        const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+        const seconds = Math.floor((timeLeft / 1000) % 60);
+
+        countdownElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        setTimeout(updateCountdown, 1000);
+    }
+
+    updateCountdown();
+}

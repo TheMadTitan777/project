@@ -1,9 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
     console.log("✅ Buyer Dashboard Loaded");
 
-    // ✅ Debugging: Check if session storage contains buyerUsername
-    console.log("Stored buyer username:", sessionStorage.getItem("buyerUsername"));
-
     const username = sessionStorage.getItem("buyerUsername");
     const profilePicture = sessionStorage.getItem("buyerProfilePicture") || "default-pfp.png";
 
@@ -18,8 +15,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("username-display").textContent = username;
     document.getElementById("user-pfp").src = profilePicture;
 
-
-    // ✅ Fetch auction items from the server
     try {
         const response = await fetch("https://blockchain-auction-site.onrender.com/api/auction-items");
         const data = await response.json();
@@ -42,6 +37,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 <p>Seller: ${item.seller_name}</p>
                 <p><strong>Time Left:</strong> <span id="${countdownId}"></span></p>
                 <button class="bid-btn" id="bid-btn-${item.id}" onclick="placeBid(${item.id})">Place Bid</button>
+                <button class="watchlist-btn" onclick="addToWatchlist(${item.id}, '${item.item_name}', '${item.item_image}', ${item.item_price}, '${item.seller_name}', '${item.bidendtime}')">⭐ Add to Watchlist</button>
             `;
 
             itemsContainer.appendChild(itemCard);
@@ -52,27 +48,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         alert("❌ Error loading auction items. Please try again later.");
     }
 
-    // ✅ Search Functionality
-    const searchBar = document.getElementById("search-bar");
-    if (searchBar) {
-        searchBar.addEventListener("keyup", function () {
-            let query = this.value.toLowerCase();
-            let items = document.querySelectorAll(".item-card");
-
-            items.forEach(item => {
-                let title = item.querySelector("h3").innerText.toLowerCase();
-                item.style.display = title.includes(query) ? "block" : "none";
-            });
-        });
-    }
-
-    // ✅ Logout Functionality
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", function () {
             console.log("🔴 Logging out...");
             sessionStorage.clear();
-            localStorage.removeItem("authToken"); // Clear token if stored
+            localStorage.removeItem("authToken");
             alert("✅ You have been logged out.");
             window.location.href = "login.html";
         });
@@ -86,7 +67,7 @@ function startCountdown(bidEndTimeRaw, elementId, itemId, itemCard) {
 
     let bidEndTime = new Date(bidEndTimeRaw);
     if (isNaN(bidEndTime.getTime())) {
-        bidEndTime = new Date(Number(bidEndTimeRaw) * 1000); // Try converting from epoch
+        bidEndTime = new Date(Number(bidEndTimeRaw) * 1000);
     }
 
     if (isNaN(bidEndTime.getTime())) {
@@ -122,5 +103,21 @@ function startCountdown(bidEndTimeRaw, elementId, itemId, itemCard) {
 // ✅ Place Bid Function
 function placeBid(itemId) {
     sessionStorage.setItem("selectedItem", itemId);
-    window.location.href = "bid.html"; // Redirect to the bid page
+    window.location.href = "bid.html";
+}
+
+// ✅ Add to Watchlist Function
+function addToWatchlist(id, name, image, price, seller, bidendtime) {
+    let watchlist = JSON.parse(sessionStorage.getItem("watchlist")) || [];
+
+    // Check if item already exists in watchlist
+    if (watchlist.some(item => item.id === id)) {
+        alert("⚠️ Item is already in your watchlist!");
+        return;
+    }
+
+    watchlist.push({ id, name, image, price, seller, bidendtime });
+    sessionStorage.setItem("watchlist", JSON.stringify(watchlist));
+
+    alert("✅ Item added to your watchlist!");
 }
