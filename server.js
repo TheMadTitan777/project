@@ -49,22 +49,48 @@ app.options("*", cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ✅ Ensure "uploads" directory exists
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-}
 
-// ✅ Image Upload Setup (Multer)
+app.use(express.json());
+app.use("/uploads", express.static("uploads")); // Serve images
+
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Define Storage Engine
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
-    },
+    destination: "uploads/",
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+    },
+});
+
+const upload = multer({ storage });
+
+// Schema for Items
+const AuctionItemSchema = new mongoose.Schema({
+    item_name: String,
+    item_price: Number,
+    item_image: String, // Store image path
+});
+
+const AuctionItem = mongoose.model("AuctionItem", AuctionItemSchema);
+
+// Upload Route
+app.post("/api/upload-item", upload.single("itemImage"), async (req, res) => {
+    try {
+        const { item_name, item_price } = req.body;
+        const newItem = new AuctionItem({
+            item_name,
+            item_price,
+            item_image: req.file.path, // Store file path in DB
+        });
+
+        await newItem.save();
+        res.json({ message: "Item uploaded successfully", item: newItem });
+    } catch (error) {
+        console.error("Upload error:", error);
+        res.status(500).json({ message: "Error uploading item" });
     }
 });
-const upload = multer({ storage });
 
 // 📌 Buyer Signup Route
 app.post("/api/buyer/signup", async (req, res) => {
