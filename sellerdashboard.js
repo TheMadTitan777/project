@@ -95,7 +95,7 @@ async function deleteItem(itemId) {
     if (!confirm("Are you sure you want to delete this item?")) return;
 
     try {
-        const response = await fetch(`https://blockchain-auction-site.onrender.com/api/delete-item/${itemId}`, {
+        const response = await fetch(`https://blockchain-auction-site.onrender.com/api/seller/delete-item/${itemId}`, {
             method: "DELETE",
         });
 
