@@ -35,8 +35,6 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "intro.html"));
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
 
 // ✅ Middleware
 app.use(cors({
