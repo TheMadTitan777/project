@@ -27,13 +27,11 @@ pool.connect()
     });
 
 
-// Serve static files (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, "public"))); 
+    const path = require("path");
 
-// Serve intro.html as the homepage
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "intro.html"));
-});
+    app.get("/intro", (req, res) => {
+        res.sendFile(path.join(__dirname, "intro.html")); // Serve from root
+    });
 
 
 // ✅ Middleware
