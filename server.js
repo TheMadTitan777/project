@@ -27,8 +27,6 @@ pool.connect()
     });
 
 
-    const path = require("path");
-
     app.get("/intro", (req, res) => {
         res.sendFile(path.join(__dirname, "intro.html")); // Serve from root
     });
