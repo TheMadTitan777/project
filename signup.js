@@ -12,21 +12,6 @@ function togglePassword(fieldId, eyeId) {
     }
 }
 
-// Wallet connection functionality using MetaMask
-async function connectWallet() {
-    if (typeof window.ethereum !== "undefined") {
-        try {
-            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-            document.getElementById("walletAddress").value = accounts[0]; // Store wallet address in hidden input field
-            document.getElementById("wallet-status").innerText = "Connected: " + accounts[0]; // Show connected wallet
-        } catch (error) {
-            console.error("Wallet connection failed:", error);
-            alert("Failed to connect wallet.");
-        }
-    } else {
-        alert("Please install MetaMask to use this feature.");
-    }
-}
 
 // Handle wallet connection button click
 document.getElementById("wallet-connect").addEventListener("click", connectWallet);
