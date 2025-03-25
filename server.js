@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const { Pool } = require("pg");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const mongoose = require("mongoose");
 const path = require("path");
 const fs = require("fs");
 
