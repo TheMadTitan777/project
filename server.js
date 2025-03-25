@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const { Pool } = require("pg");
 const bodyParser = require("body-parser");
 const multer = require("multer");
-const mongoose = require("mongoose");
 const path = require("path");
 const fs = require("fs");
 
@@ -54,7 +53,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/uploads", express.static("uploads")); // Serve images
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Define Storage Engine
 const storage = multer.diskStorage({
@@ -66,14 +64,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Schema for Items
-const AuctionItemSchema = new mongoose.Schema({
-    item_name: String,
-    item_price: Number,
-    item_image: String, // Store image path
-});
-
-const AuctionItem = mongoose.model("AuctionItem", AuctionItemSchema);
 
 // Upload Route
 app.post("/api/upload-item", upload.single("itemImage"), async (req, res) => {
