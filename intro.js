@@ -22,12 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
         logoutBtn.style.display = "inline-block";
     }
 
-    // Logout function
-    logoutBtn.addEventListener("click", function () {
-        sessionStorage.clear();
-        alert("✅ Successfully logged out!");
-        window.location.href = "intro.html";
-    });
 
     // Fetch auction items from API
     async function loadAuctionItems() {
