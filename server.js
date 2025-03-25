@@ -293,6 +293,32 @@ app.delete("/api/seller/delete-item/:id", async (req, res) => {
     }
 });
 
+// **Buyer Profile Endpoint**
+app.get("/api/buyer/profile", async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) return res.status(400).json({ error: "Missing userId" });
+
+    const user = database.buyers[userId];
+
+    if (!user) return res.status(404).json({ error: "Buyer not found" });
+
+    res.json(user);
+});
+
+// **Seller Profile Endpoint**
+app.get("/api/seller/profile", async (req, res) => {
+    const { userId } = req.query;
+
+    if (!userId) return res.status(400).json({ error: "Missing userId" });
+
+    const user = database.sellers[userId];
+
+    if (!user) return res.status(404).json({ error: "Seller not found" });
+
+    res.json(user);
+});
+
 
 // 🏁 Start Server
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

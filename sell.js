@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("seller-name").value = sellerName;
 
+    // Handle form submission
     form.addEventListener("submit", async function (event) {
         event.preventDefault();
 
@@ -57,4 +58,14 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("❌ Server error. Try again later.");
         }
     });
+
+    // Logout function
+    function logoutSeller() {
+        sessionStorage.clear();
+        alert("✅ Logged out successfully!");
+        window.location.href = "selllog.html"; // Redirect to login page
+    }
+
+    // Add event listener for logout
+    document.getElementById("logout-btn").addEventListener("click", logoutSeller);
 });

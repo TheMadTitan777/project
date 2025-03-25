@@ -1,15 +1,11 @@
 document.addEventListener("DOMContentLoaded", async function () {
+    console.log("🔍 Checking sessionStorage userId:", sessionStorage.getItem("userId")); // Debugging
+
     let userId = sessionStorage.getItem("userId");
 
-    if (!userId) {
-        alert("Please log in first.");
-        window.location.href = "login.html";
-        return;
-    }
-
+    // Fetch Profile Data
     try {
-        // Fetch buyer details from API
-        const response = await fetch(`/buyer-profile?userId=${userId}`, {
+        const response = await fetch(`/api/buyer/profile?userId=${userId}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include"
@@ -26,19 +22,23 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("dob").textContent = user.dob || "N/A";
         document.getElementById("shippingAddress").textContent = user.shippingAddress || "N/A";
 
-        // Load wallets from user data
+        // ✅ Log the retrieved user data
+        console.log("✅ User Data Loaded:", user);
+
         updateWalletList(user.wallets || []);
     } catch (error) {
         console.error("Error loading profile:", error);
         alert("Error loading profile.");
     }
+});
+
 
     // Load saved profile picture from localStorage
     const savedPic = localStorage.getItem("profilePic");
     if (savedPic) {
         document.getElementById("profile-img").src = savedPic;
     }
-});
+
 
 // Profile Image Upload
 document.getElementById("upload-img").addEventListener("change", function (event) {

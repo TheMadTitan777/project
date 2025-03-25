@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <p>Starting Bid: ${parseFloat(item.price).toFixed(4)} ETH</p>
             <p>Seller: ${item.seller}</p>
             <p><strong>Time Left:</strong> <span id="countdown-${item.id}"></span></p>
+            <button class="place-bid-btn" onclick="placeBid(${item.id})">Place Bid</button>
             <button class="remove-btn" onclick="removeFromWatchlist(${item.id})">❌ Remove</button>
         `;
 
@@ -26,6 +27,12 @@ document.addEventListener("DOMContentLoaded", function () {
         startCountdown(item.bidendtime, `countdown-${item.id}`);
     });
 });
+
+// ✅ Place Bid Function
+function placeBid(itemId) {
+    sessionStorage.setItem("selectedItem", itemId);
+    window.location.href = "bid.html";
+};
 
 // ✅ Remove Item from Watchlist
 function removeFromWatchlist(itemId) {

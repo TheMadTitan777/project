@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             <img src="${item.item_image}" alt="${item.item_name}">
             <h3>${item.item_name}</h3>
             <p>Starting Bid: ${item.item_price} ETH</p>
+            <p class="description">Description: ${item.item_description}</p> <!-- ✅ Add Description Here -->
             <p>Seller: ${item.seller_name}</p>
             <p><strong>Time Left:</strong> <span id="${countdownId}"></span></p>
             <input type="number" id="bid-amount-${item.id}" placeholder="Enter your bid in ETH">

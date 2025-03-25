@@ -3,75 +3,142 @@ body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(to right, #554be5, #401ca2);
     color: white;
     text-align: center;
+    position: relative;
 }
 
-/* Container */
-.container {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 500px;
+/* Video Background */
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
 }
 
-/* Headings */
-h1 {
-    font-size: 28px;
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Navbar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+nav .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    top: 200px;
+}
+
+.hero h1 {
+    font-size: 36px;
     margin-bottom: 10px;
 }
 
-p {
+.hero p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.buttons button {
+    padding: 12px 20px;
+    margin: 10px;
     font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
 }
 
-/* Options */
-.options {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+#buyer-btn {
+    background: #ff5e62;
+    color: white;
 }
 
-.card {
+#seller-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.buttons button:hover {
+    opacity: 0.8;
+}
+
+/* Auction Section */
+.auctions {
+    margin-top: 400px;
+    padding: 40px;
     background: white;
     color: black;
-    padding: 20px;
+}
+
+.auction-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.auction-item {
+    background: #f9f9f9;
+    padding: 15px;
     border-radius: 10px;
-    width: 45%;
     text-align: center;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    margin: 0 10px; /* Adds space between the cards */
+    width: 250px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.card:hover {
-    transform: scale(1.1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+.auction-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
-/* Icons */
-.card i {
-    font-size: 40px;
+.price {
+    font-size: 18px;
+    font-weight: bold;
     color: #ff5e62;
-    margin-bottom: 10px;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-    .options {
-        flex-direction: column;
-    }
-
-    .card {
-        width: 100%;
-        margin-bottom: 15px;
-    }
 }
